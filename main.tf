@@ -4,7 +4,7 @@ provider "aws" {
 
 
 resource "aws_iam_role" "lambda_exec_role" {
-  name = "lambda_exec_role_github"
+  name = "lambda_exec_role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -25,7 +25,7 @@ resource "aws_iam_role_policy_attachment" "lambda_s3_attach" {
 }
 
 resource "aws_lambda_function" "sales_analyzer" {
-  function_name    = "analyze_sales_data3"
+  function_name    = "analyze_sales_data"
   filename         = "${path.module}/lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/lambda.zip")
   role             = aws_iam_role.lambda_exec_role.arn
