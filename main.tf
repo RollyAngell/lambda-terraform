@@ -2,13 +2,13 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-# Crear el bucket principal
+# Create the main bucket
 resource "aws_s3_bucket" "data_analyst_demo_roly" {
   bucket = "data-analyst-demo-roly"
   force_destroy = true
 }
 
-# Crear los "folders" (prefixes) input/, output/ y lambda-terraform-state/
+# Create the "folders" (prefixes) input/, output/ and lambda-terraform-state/
 resource "aws_s3_object" "input_folder" {
   bucket = aws_s3_bucket.data_analyst_demo_roly.id
   key    = "input/"
@@ -40,6 +40,7 @@ CSV
   content_type = "text/csv"
 }
 
+# IAM role for Lambda
 resource "aws_iam_role" "lambda_exec_role" {
   name = "lambda_exec_role"
 
@@ -56,11 +57,13 @@ resource "aws_iam_role" "lambda_exec_role" {
   })
 }
 
+# Attach S3 full access policy to the Lambda role
 resource "aws_iam_role_policy_attachment" "lambda_s3_attach" {
   role       = aws_iam_role.lambda_exec_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
+# Lambda function resource
 resource "aws_lambda_function" "sales_analyzer" {
   function_name    = "analyze_sales_data"
   filename         = "${path.module}/lambda.zip"
@@ -79,6 +82,7 @@ resource "aws_lambda_function" "sales_analyzer" {
   }
 }
 
+# Configure remote backend for Terraform state
 terraform {
   backend "s3" {
     bucket = "data-analyst-demo-roly"
