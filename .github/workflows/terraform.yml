@@ -24,6 +24,12 @@ jobs:
       - name: Instalar Terraform
         uses: hashicorp/setup-terraform@v3
 
+      - name: Empaquetar Lambda
+        run: |
+          cd lambda
+          zip ../lambda.zip lambda_function.py
+          cd ..
+
       - name: Inicializar Terraform
         run: terraform init
 
