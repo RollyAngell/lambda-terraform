@@ -1,5 +1,4 @@
 provider "aws" {
-  profile = "roly-dev"
   region  = "us-east-1"
 }
 
