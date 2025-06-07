@@ -41,3 +41,11 @@ resource "aws_lambda_function" "sales_analyzer" {
     }
   }
 }
+
+terraform {
+  backend "s3" {
+    bucket = "data-analyst-demo-roly"
+    key    = "lambda-terraform-state/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
