@@ -2,6 +2,43 @@ provider "aws" {
   region  = "us-east-1"
 }
 
+# Crear el bucket principal
+resource "aws_s3_bucket" "data_analyst_demo_roly" {
+  bucket = "data-analyst-demo-roly"
+  force_destroy = true
+}
+
+# Crear los "folders" (prefixes) input/, output/ y lambda-terraform-state/
+resource "aws_s3_object" "input_folder" {
+  bucket = aws_s3_bucket.data_analyst_demo_roly.id
+  key    = "input/"
+}
+
+resource "aws_s3_object" "output_folder" {
+  bucket = aws_s3_bucket.data_analyst_demo_roly.id
+  key    = "output/"
+}
+
+resource "aws_s3_object" "lambda_terraform_state_folder" {
+  bucket = aws_s3_bucket.data_analyst_demo_roly.id
+  key    = "lambda-terraform-state/"
+}
+
+resource "aws_s3_object" "input_sales_csv" {
+  bucket = aws_s3_bucket.data_analyst_demo_roly.id
+  key    = "input/sales.csv"
+  content = <<CSV
+region,sales
+Norte,100
+Sur,200
+Norte,150
+Este,300
+Sur,100
+Oeste,250
+Este,200
+CSV
+  content_type = "text/csv"
+}
 
 resource "aws_iam_role" "lambda_exec_role" {
   name = "lambda_exec_role"
